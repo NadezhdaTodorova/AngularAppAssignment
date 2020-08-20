@@ -1,0 +1,25 @@
+<div class="alert alert-success" *ngIf="itemAdded" role="alert">
+    {{ item.name }} was added to your shopping cart!
+  </div>
+<div class="row item-detail">
+    <span>
+        <img [src]="item.imagesPath[0]" [alt]="item.name" class="img-responsive firstImage">
+    </span>
+    <div class="col-sm-6 mt-5">
+        <h4> {{ item.name }} </h4>
+        <p> {{ item.description }} </p>
+        <p> {{ item.price }}$ </p>
+    </div>
+    <div class="col-sm-4">
+        <a href='#' *ngFor="let imagePath of item.imagesPath; index as i">
+            <img [src]="imagePath" [alt]="item.name + '/image/' + i" class="img-responsive itemImages">
+        </a>
+    </div>
+    <div class="col-sm-2" id="quant">
+        <input class="form-control" type="number">
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-primary" (click)="onSelect()">Add To Cart</button>
+    </div>
+</div>
+    
