@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ShoppingCartComponent } from '../shopping-cart/shopping-cart.component';
+import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  cartItemNum: number;
 
-  constructor() { }
+  constructor(private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
   }
 
+  ngDoCheck(){
+    this.cartItemNum = this.shoppingCartService.getShoppingCart().length;
+  }
 }
