@@ -22,14 +22,14 @@
                     <p> {{ item.description }} </p>
                 </td>
                 <td>${{ item.price }}</td>
-                <td> 2 </td>
+                <td> {{ item.qty }} </td>
                 <td> $26</td>
             </tr>
         </tbody>
     </table>
 </div>
     <div class="col-sm-2" style="float: right;">
-        Subtotal: $26
+        Subtotal: {{ total }}
         <button class="btn btn-primary">Checkout</button>
     </div>
     

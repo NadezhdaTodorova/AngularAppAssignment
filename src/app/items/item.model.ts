@@ -6,5 +6,6 @@ export class Item {
         public price: number,
         public imagesPath: string[],
         public category: string,
+        public qty: number,
     ){}
 }
