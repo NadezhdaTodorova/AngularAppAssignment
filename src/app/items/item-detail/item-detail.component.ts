@@ -46,6 +46,15 @@ export class ItemDetailComponent implements OnInit {
       this.shoppingCartService.shoppingCart.push(this.item);
     }
     this.itemAdded = true; 
+
+    let newShoppingCart = this.shoppingCartService.getShoppingCart().map(this.calculateTotal);
+    this.shoppingCartService.total = newShoppingCart.reduce((a, b) => {
+      return a + b;
+    });
+  }
+
+  calculateTotal(item: Item) {
+    return item.qty * item.price
   }
 
   onQtySelected(event: Event){
