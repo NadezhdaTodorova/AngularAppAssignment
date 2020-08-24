@@ -14,8 +14,8 @@ export class ShoppingCartComponent implements OnInit {
   constructor(private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
-    this.shoppingCart = this.shoppingCartService.getShoppingCart();
-    this.total = this.shoppingCartService.getTotal();
+    this.shoppingCart = JSON.parse(localStorage.getItem("shoppingCart"));
+    this.total = JSON.parse(localStorage.getItem("total"));
   }
 
 }

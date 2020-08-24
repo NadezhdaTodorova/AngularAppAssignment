@@ -43,7 +43,13 @@ export class ItemDetailComponent implements OnInit {
         });
     }else{
       this.item.qty = quantity;
-      this.shoppingCartService.shoppingCart.push(this.item);
+      if(!JSON.parse(localStorage.getItem("shoppingCart"))){
+        this.shoppingCartService.shoppingCart.push(this.item);
+      }
+      else {
+        this.shoppingCartService.shoppingCart = JSON.parse(localStorage.getItem("shoppingCart"));
+        this.shoppingCartService.shoppingCart.push(this.item);
+      }
     }
     this.itemAdded = true; 
 
@@ -51,7 +57,11 @@ export class ItemDetailComponent implements OnInit {
     this.shoppingCartService.total = newShoppingCart.reduce((a, b) => {
       return a + b;
     });
+
+    localStorage.setItem('shoppingCart', JSON.stringify(this.shoppingCartService.getShoppingCart()));
+    localStorage.setItem('total', JSON.stringify(this.shoppingCartService.getTotal()));
   }
+  
 
   calculateTotal(item: Item) {
     return item.qty * item.price

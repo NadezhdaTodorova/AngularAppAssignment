@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ShoppingCartComponent } from '../shopping-cart/shopping-cart.component';
 import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
+import { Item } from '../items/item.model';
 
 @Component({
   selector: 'app-header',
@@ -9,13 +10,12 @@ import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 })
 export class HeaderComponent implements OnInit {
   cartItemNum: number;
-
   constructor(private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
   }
 
   ngDoCheck(){
-    this.cartItemNum = this.shoppingCartService.getShoppingCart().length;
+    this.cartItemNum = this.shoppingCartService.getQty();
   }
 }
