@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ShoppingCartComponent } from '../shopping-cart/shopping-cart.component';
 import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
-import { Item } from '../items/item.model';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -13,9 +12,7 @@ export class HeaderComponent implements OnInit {
   constructor(private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
-  }
-
-  ngDoCheck(){
-    this.cartItemNum = this.shoppingCartService.getQty();
+    const qtyObservable = fromEvent<MouseEvent>(document, "click");
+    qtyObservable.subscribe(click => this.cartItemNum = this.shoppingCartService.getQty());
   }
 }
