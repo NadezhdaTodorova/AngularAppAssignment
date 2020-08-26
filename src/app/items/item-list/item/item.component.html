@@ -1,0 +1,12 @@
+<a href="javascript.void(0)" [routerLink]="['/items/' + item.id]" >
+    <div class="col= item">
+        <span>
+            <img [src]="item.imagesPath[0]" [alt]="item.name" class="img-responsive" id="imageFirst">
+        </span>
+        <div class="col-sm-6">
+            <h4> {{ item.name }} </h4>
+            <p> {{ item.category }} </p>
+            <p> {{ item.price }}$ </p>
+        </div>
+    </div>
+</a>
