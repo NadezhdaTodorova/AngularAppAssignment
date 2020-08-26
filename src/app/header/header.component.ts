@@ -8,7 +8,8 @@ import { fromEvent } from 'rxjs';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  cartItemNum: number;
+  cartItemNum = this.shoppingCartService.getQty();
+  
   constructor(private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {

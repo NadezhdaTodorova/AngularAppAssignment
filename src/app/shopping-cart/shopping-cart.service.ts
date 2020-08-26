@@ -7,7 +7,8 @@ export class ShoppingCartService {
 
 
     getShoppingCart(){
-        return this.shoppingCart.slice();
+        let storage = this.getLocalStorage();
+        return storage ? this.shoppingCart = storage.cart : this.shoppingCart.slice();
     }
 
     getTotal(){
@@ -24,15 +25,11 @@ export class ShoppingCartService {
         return this.cartItemNum;
     }
 
-    setToLocalStorage(){
-        this.shoppingCart = this.getShoppingCart();
-        this.total = this.getTotal();
-        this.cartItemNum = this.getQty();
-
+    setToLocalStorage(shoppingCart, total, qty){
         let localStorageObject = {
-            cart: this.shoppingCart,
-            total: this.total,
-            qty: this.cartItemNum
+            cart: shoppingCart,
+            total: total,
+            qty: qty
         }
         localStorage.setItem('localStorageObject', JSON.stringify(localStorageObject));
     }
@@ -43,6 +40,7 @@ export class ShoppingCartService {
     }
 
     pushItemToCart(item: Item, qtyNum: number){
+      debugger;
         let storage = this.getLocalStorage();
         this.shoppingCart = storage ? storage.cart : [];
         let existingItem = this.shoppingCart.find(x => x.id == item.id);
@@ -62,12 +60,12 @@ export class ShoppingCartService {
           }
         }
     
-        let newShoppingCart = this.getShoppingCart().map(this.calculateTotal);
+        let newShoppingCart = this.shoppingCart.map(this.calculateTotal);
         this.total = newShoppingCart.reduce((a, b) => {
           return a + b;
         });
         
-        this.setToLocalStorage();
+        this.setToLocalStorage(this.shoppingCart, this.total, this.getQty);
     }
 
     calculateTotal(item: Item) {
