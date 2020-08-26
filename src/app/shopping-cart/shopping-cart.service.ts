@@ -40,7 +40,6 @@ export class ShoppingCartService {
     }
 
     pushItemToCart(item: Item, qtyNum: number){
-      debugger;
         let storage = this.getLocalStorage();
         this.shoppingCart = storage ? storage.cart : [];
         let existingItem = this.shoppingCart.find(x => x.id == item.id);
