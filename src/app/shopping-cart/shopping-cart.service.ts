@@ -1,21 +1,55 @@
 import { Item } from '../items/item.model';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
+@Injectable({providedIn: 'root'})
 export class ShoppingCartService {
     shoppingCart: Item[] = [];
     total: number;
     cartItemNum: number;
 
+  constructor(private http: HttpClient) {}
 
-    getShoppingCart(){
+  public getShoppingCart(){
+        this.fetchItems();
         let storage = this.getLocalStorage();
-        return storage ? this.shoppingCart = storage.cart : this.shoppingCart.slice();
+        return storage ? this.shoppingCart = storage.cart : this.shoppingCart;
     }
 
-    getTotal(){
+    private fetchItems(){
+      return this.http.get('https://angular-assigment-app.firebaseio.com/posts.json')
+      .pipe(
+          map(responseData => {
+              const postsArray =[];
+              for(const key in responseData){
+                  postsArray.push(responseData[key])
+              }
+              return postsArray;
+          })
+      ).subscribe((items) => {
+        return this.shoppingCart = items;
+      })
+  }
+
+  private storeItems(shoppingCart: Item[]) {
+    this.http.put('https://angular-assigment-app.firebaseio.com/posts.json',
+        shoppingCart
+    ).subscribe(responseData => {
+        console.log('Post send successfully!');
+    });
+}
+
+    public saveItems(shoppingCart: Item[], total: number, qtyNum: number){
+      this.setToLocalStorage(shoppingCart,total,qtyNum);
+      this.storeItems(shoppingCart);
+    }
+
+  public getTotal(){
         return this.total;
     }
 
-    getQty(){
+    public getQty(){
         this.cartItemNum = 0;
         let reducer = (acc, item) => {
             return acc + item.qty;
@@ -25,7 +59,7 @@ export class ShoppingCartService {
         return this.cartItemNum;
     }
 
-    setToLocalStorage(shoppingCart, total, qty){
+    private setToLocalStorage(shoppingCart: Item[], total: number, qty: number){
         let localStorageObject = {
             cart: shoppingCart,
             total: total,
@@ -34,14 +68,14 @@ export class ShoppingCartService {
         localStorage.setItem('localStorageObject', JSON.stringify(localStorageObject));
     }
 
-    getLocalStorage(){
+    private  getLocalStorage(){
         let storage = JSON.parse(localStorage.getItem("localStorageObject"));
         return storage;
     }
 
-    pushItemToCart(item: Item, qtyNum: number){
+    public addItemToCart(item: Item, qtyNum: number){
+        this.setToLocalStorage(this.shoppingCart, this.getTotal(), this.getQty());
         let storage = this.getLocalStorage();
-        this.shoppingCart = storage ? storage.cart : [];
         let existingItem = this.shoppingCart.find(x => x.id == item.id);
     
         if(existingItem){
@@ -64,10 +98,10 @@ export class ShoppingCartService {
           return a + b;
         });
         
-        this.setToLocalStorage(this.shoppingCart, this.total, this.getQty);
+        this.setToLocalStorage(this.shoppingCart, this.total, this.getQty());
     }
 
-    calculateTotal(item: Item) {
+    private calculateTotal(item: Item) {
         return item.qty * item.price
       }
 }

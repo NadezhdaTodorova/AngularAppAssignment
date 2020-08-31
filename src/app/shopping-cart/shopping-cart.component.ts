@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from '../items/item.model';
 import { ShoppingCartService } from './shopping-cart.service';
-import { PostsService } from '../posts.service';
 
 
 @Component({
@@ -12,15 +11,17 @@ import { PostsService } from '../posts.service';
 export class ShoppingCartComponent implements OnInit {
   shoppingCart: Item[];
   total: number;
+  qty: number;
 
-  constructor(private shoppingCartService: ShoppingCartService, private postsService: PostsService) { }
+  constructor(private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
     this.shoppingCart = this.shoppingCartService.getShoppingCart();
     this.total = this.shoppingCartService.getTotal();
+    this.qty = this.shoppingCartService.getQty();
   }
 
   onCheckout(){
-    this.postsService.postShoppingCart(this.shoppingCart);
+    this.shoppingCartService.saveItems(this.shoppingCart, this.total, this.qty);
   }   
 }
