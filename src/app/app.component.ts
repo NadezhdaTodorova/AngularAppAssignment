@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ItemService } from './items/item.service'
 import { ShoppingCartService } from './shopping-cart/shopping-cart.service';
 
@@ -9,6 +9,13 @@ import { ShoppingCartService } from './shopping-cart/shopping-cart.service';
   providers: [ItemService, ShoppingCartService]
 
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'shopping-site-assignment';
+
+  constructor(){}
+  
+  ngOnInit(): void {
+    
+  }
+
 }

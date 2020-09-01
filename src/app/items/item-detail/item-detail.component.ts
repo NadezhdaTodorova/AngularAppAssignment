@@ -30,7 +30,7 @@ export class ItemDetailComponent implements OnInit {
   }
 
   onSelect(){
-    this.shoppingCartService.pushItemToCart(this.item, this.qtyNum);
+    this.shoppingCartService.addItemToCart(this.item, this.qtyNum);
     this.itemAdded = true; 
   }
 

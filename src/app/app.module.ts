@@ -11,6 +11,8 @@ import { ItemListComponent } from './items/item-list/item-list.component';
 import { ItemComponent } from './items/item-list/item/item.component';
 import { ItemDetailComponent } from './items/item-detail/item-detail.component';
 import { ItemsComponent } from './items/items.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { ItemsComponent } from './items/items.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [],
