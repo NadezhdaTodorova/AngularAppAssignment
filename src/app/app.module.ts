@@ -13,7 +13,6 @@ import { ItemDetailComponent } from './items/item-detail/item-detail.component';
 import { ItemsComponent } from './items/items.component';
 import { HttpClientModule } from '@angular/common/http';
 
-
 @NgModule({
   declarations: [
     AppComponent,
