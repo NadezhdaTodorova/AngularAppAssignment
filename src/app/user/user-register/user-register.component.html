@@ -1,0 +1,40 @@
+<div class="row  mt-5">
+    <div class="alert alert-danger" id="alertError" *ngIf="error">
+        {{ this.error }}
+    </div>
+    <div class="col-md-12 d-flex justify-content-center">
+        <div *ngIf="isLoading">
+            <app-loading-spinner></app-loading-spinner>
+        </div>
+        <form #userForm="ngForm" (ngSubmit)="onRegister(userForm)">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" ngModel name="email"
+                    required email>
+            </div>
+            <div class="form-group">
+                <label for="email">Name</label>
+                <input type="name" class="form-control" id="name" placeholder="Enter name" ngModel name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Surname</label>
+                <input type="Surname" class="form-control" id="Surname" placeholder="Enter surname" ngModel
+                    name="surname" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password" ngModel name="password"
+                    required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="password">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" ngModel
+                    name="Confirm password" required minlength="6">
+            </div>
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Register</button>
+            </div>
+
+        </form>
+    </div>
+</div>
