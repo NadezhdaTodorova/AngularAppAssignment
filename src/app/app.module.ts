@@ -11,10 +11,13 @@ import { ItemListComponent } from './items/item-list/item-list.component';
 import { ItemComponent } from './items/item-list/item/item.component';
 import { ItemDetailComponent } from './items/item-detail/item-detail.component';
 import { ItemsComponent } from './items/items.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
-import { UserLoginComponent } from './user/user-login/user-login.component'
+import { UserLoginComponent } from './user/user-login/user-login.component';
+import { ShoppingCartService } from './shopping-cart/shopping-cart.service';
+import { ItemService } from './items/item.service';
+import { UserInterceptorService } from './user/user-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -34,9 +37,14 @@ import { UserLoginComponent } from './user/user-login/user-login.component'
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule 
   ],
-  providers: [],
+  providers: [ShoppingCartService, ItemService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: UserInterceptorService,
+    multi: true
+   }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

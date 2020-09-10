@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Item } from '../items/item.model';
 import { ShoppingCartService } from './shopping-cart.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -10,20 +11,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./shopping-cart.component.scss'],
 })
 export class ShoppingCartComponent implements OnInit {
-  shoppingCart: Item[];
-  total: number;
-  qty: number;
+  public shoppingCart$: Observable<Item[]> = this.shoppingCartService.shoppingCart$;
+  public total$: Observable<number> = this.shoppingCartService.totalShoppingCart$;;
 
   constructor(private shoppingCartService: ShoppingCartService, private router: Router) { }
 
   ngOnInit(): void {
-    this.shoppingCart = this.shoppingCartService.getShoppingCart();
-    this.total = this.shoppingCartService.getTotal();
-    this.qty = this.shoppingCartService.getQty();
+    this.total$.subscribe(x => 
+      console.log(x));
   }
 
   onCheckout(){
-    this.shoppingCartService.saveItems(this.shoppingCart, this.total, this.qty);
+    this.shoppingCartService.storeItems();
     this.router.navigate(['/checkout']);
   }   
 }

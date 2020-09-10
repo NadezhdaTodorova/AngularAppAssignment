@@ -16,8 +16,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of shoppingCart">
-                <td><img [src]="item.imagesPath[0]" [alt]="item.name" class="img-responsive firstImage"></td>
+            <tr *ngFor="let item of shoppingCart$ | async">
+                <td> 
+                    <span *ngIf="item.id === 0">
+                        <img src="../assets/pictures/ezperanzaEyeshadow/first.png" [alt]="item.name" class="img-responsive firstImage">
+                    </span>
+                    <span *ngIf="item.id === 1">
+                        <img src="../assets/pictures/autumnEyeshadow/first.png" [alt]="item.name" class="img-responsive firstImage">
+                    </span>
+                    <span *ngIf="item.id === 2">
+                        <img src="../assets/pictures/roseGoldBrush/first.png" [alt]="item.name" class="img-responsive firstImage">
+                    </span>
+                    <span *ngIf="item.id === 3">
+                        <img src="../assets/pictures/CaribbeanBrush/first.png" [alt]="item.name" class="img-responsive firstImage">
+                    </span></td>
                 <td id="itemDesc"><h6> {{ item.name }} </h6>
                     <p> {{ item.description }} </p>
                 </td>
@@ -29,7 +41,7 @@
     </table>
 </div>
     <div class="col-sm-2" style="float: right;">
-        Subtotal: {{ total }}
+        Subtotal: {{ total$ | async }}
         <button class="btn btn-primary" (click)="onCheckout()">Checkout</button>
     </div>
     

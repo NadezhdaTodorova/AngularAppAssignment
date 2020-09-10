@@ -1,7 +1,16 @@
 <a href="javascript.void(0)" [routerLink]="['/items/' + item.id]" >
     <div class="col= item">
-        <span>
-            <img [src]="item.imagesPath[0]" [alt]="item.name" class="img-responsive" id="imageFirst">
+        <span *ngIf="item.id === 0">
+            <img src="../assets/pictures/ezperanzaEyeshadow/first.png" [alt]="item.name" class="img-responsive" id="imageFirst">
+        </span>
+        <span *ngIf="item.id === 1">
+            <img src="../assets/pictures/autumnEyeshadow/first.png" [alt]="item.name" class="img-responsive" id="imageFirst">
+        </span>
+        <span *ngIf="item.id === 2">
+            <img src="../assets/pictures/roseGoldBrush/first.png" [alt]="item.name" class="img-responsive" id="imageFirst">
+        </span>
+        <span *ngIf="item.id === 3">
+            <img src="../assets/pictures/CaribbeanBrush/first.png" [alt]="item.name" class="img-responsive" id="imageFirst">
         </span>
         <div class="col-sm-6">
             <h4> {{ item.name }} </h4>
