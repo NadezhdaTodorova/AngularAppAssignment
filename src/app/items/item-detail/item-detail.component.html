@@ -2,17 +2,41 @@
     {{ item.name }} was added to your shopping cart!
   </div>
 <div class="row item-detail">
-    <span>
-        <img [src]="item.imagesPath[0]" [alt]="item.name" class="img-responsive firstImage">
-    </span>
+    <span *ngIf="item.id === 0">
+            <img src="../assets/pictures/ezperanzaEyeshadow/first.png" [alt]="item.name" class="img-responsive firstImage">
+        </span>
+        <span *ngIf="item.id === 1">
+            <img src="../assets/pictures/autumnEyeshadow/first.png" [alt]="item.name" class="img-responsive firstImage">
+        </span>
+        <span *ngIf="item.id === 2">
+            <img src="../assets/pictures/roseGoldBrush/first.png" [alt]="item.name" class="img-responsive firstImage">
+        </span>
+        <span *ngIf="item.id === 3">
+            <img src="../assets/pictures/CaribbeanBrush/first.png" [alt]="item.name" class="img-responsive firstImage">
+        </span>
     <div class="col-sm-6 mt-5">
         <h4> {{ item.name }} </h4>
         <p> {{ item.description }} </p>
         <p> {{ item.price }}$ </p>
     </div>
-    <div class="col-sm-4">
-        <a href='#' *ngFor="let imagePath of item.imagesPath; index as i">
-            <img [src]="imagePath" [alt]="item.name + '/image/' + i" class="img-responsive itemImages">
+    <div class="col-sm-4" *ngIf="item.id === 0">
+        <a href='#' *ngFor="let imagePath of ezpImages">
+            <img [src]="imagePath" [alt]="0" class="img-responsive itemImages">
+        </a>
+    </div>
+    <div class="col-sm-4" *ngIf="item.id === 1">
+        <a href='#' *ngFor="let imagePath of autuImages">
+            <img [src]="imagePath" [alt]="1" class="img-responsive itemImages">
+        </a>
+    </div>
+    <div class="col-sm-4" *ngIf="item.id === 2">
+        <a href='#' *ngFor="let imagePath of goldBrushImages">
+            <img [src]="imagePath" [alt]="2" class="img-responsive itemImages">
+        </a>
+    </div>
+    <div class="col-sm-4" *ngIf="item.id === 3">
+        <a href='#' *ngFor="let imagePath of carrBrushImages">
+            <img [src]="imagePath" [alt]="3" class="img-responsive itemImages">
         </a>
     </div>
     <div class="col-sm-2" id="quant">

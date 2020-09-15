@@ -1,120 +1,82 @@
 import { Item } from '../items/item.model';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, take, exhaustMap } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { UserService } from '../user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingCartService {
-  shoppingCart: Item[] = [];
-  total: number;
-  cartItemNum: number;
+  private readonly shoppingCartSubj = new BehaviorSubject<Item[]>([]);
+  public readonly shoppingCart$: Observable<Item[]> = this.shoppingCartSubj.asObservable();
 
-  constructor(private http: HttpClient) { }
-
-  public getShoppingCart() {
-    let storage = this.getLocalStorage();
-
-    if (storage == null) {
-      this.fetchItems().subscribe((items) => {
-        this.setToLocalStorage(items, this.total, this.cartItemNum)
-        this.shoppingCart = items;
-      });
-    } else {
-      this.shoppingCart = storage.cart;
+  public readonly totalShoppingCart$ = this.shoppingCart$.pipe(
+    map((items) => {
+      if (items.length > 0) {
+        return items.map(item => item.qty * item.price)
+          .reduce((a, b) => {
+            return a + b;
+          });
+      }
     }
-    return this.shoppingCart;
-  }
+  ));
 
-  private fetchItems() {
-    return this.http.get('https://angular-assigment-app.firebaseio.com/posts.json')
-      .pipe(
-        map(responseData => {
-          const postsArray = [];
-          for (const key in responseData) {
-            postsArray.push({ ...responseData[key] })
-          }
-          return postsArray;
-        })
-      )
-  }
+  public readonly qtyShoppingCart$ = this.shoppingCart$.pipe(
+    map(items => {
+      let qty = 0;
+       items.map((item) => {
+         return qty = qty + item.qty;
+      })
+      return qty;
+    }
+  ))
 
-  private storeItems(shoppingCart: Item[]) {
-    this.http.put('https://angular-assigment-app.firebaseio.com/posts.json',
+  constructor(private http: HttpClient, private userService: UserService) { }
+  
+  
+  fetchShoppingCart() {
+      return this.http.get('https://angular-assigment-app.firebaseio.com/shoppingCart.json',)
+    .pipe(
+      map(itemsResponse => {
+        return Object.keys(itemsResponse).map(id => {
+            const item = itemsResponse[id];
+            return new Item(item.id, item.name, item.description, item.price, item.imagesPath, item.category, item.qty);
+        });
+      })
+    ).subscribe((items) =>{
+      if(items){
+        this.shoppingCartSubj.next(items);
+      }
+    });
+}
+  
+   storeItems() {
+    let shoppingCart: Item[];
+    this.shoppingCartSubj.subscribe(
+      items => shoppingCart = items
+    )
+    this.http.put<Item []>('https://angular-assigment-app.firebaseio.com/shoppingCart.json',
       shoppingCart
-    ).subscribe(responseData => {
-      console.log('Post send successfully!');
-    });
+    ).subscribe();
   }
 
-  public saveItems(shoppingCart: Item[], total: number, qty: number) {
-    debugger;
-    this.setToLocalStorage(shoppingCart, total, qty);
-    this.storeItems(shoppingCart);
-  }
+   addItemToCart(newItem: Item, qtyNum: number) {
+    let  items = this.shoppingCartSubj.value;
+    let existingItem = items.find(item => item.id == newItem.id);
 
-  public getTotal() {
-    if (this.shoppingCart.length > 0) {
-      let newShoppingCart = this.shoppingCart.map(this.calculateTotal);
-      this.total = newShoppingCart.reduce((a, b) => {
-        return a + b;
-      });
-      return this.total;
-    }
-    return this.total;
-  }
-
-  public getQty() {
-    this.cartItemNum = 0;
-    let reducer = (acc, item) => {
-      return acc + item.qty;
-    }
-
-    this.cartItemNum = this.getShoppingCart().reduce(reducer, this.cartItemNum);
-    return this.cartItemNum;
-  }
-
-  private setToLocalStorage(shoppingCart: Item[], total: number, qty: number) {
-    let localStorageObject = {
-      cart: shoppingCart,
-      total: total,
-      qty: qty
-    }
-    localStorage.setItem('localStorageObject', JSON.stringify(localStorageObject));
-  }
-
-  private getLocalStorage() {
-    let storage = JSON.parse(localStorage.getItem("localStorageObject"));
-    return storage;
-  }
-
-  public addItemToCart(item: Item, qtyNum: number) {
-    let storage = this.getLocalStorage();
-    let existingItem = this.shoppingCart.find(x => x.id == item.id);
-
-    if (existingItem) {
-      this.shoppingCart.forEach(function (item) {
-        if (item.id == existingItem.id) item.qty += qtyNum;
-      });
-    } else {
-      item.qty = qtyNum;
-      if (!storage) {
-        this.shoppingCart.push(item);
-      }
-      else {
-        this.shoppingCart = storage.cart;
-        this.shoppingCart.push(item);
-      }
-    }
-    let newShoppingCart = this.shoppingCart.map(this.calculateTotal);
-    this.total = newShoppingCart.reduce((a, b) => {
-      return a + b;
-    });
-
-
-    this.setToLocalStorage(this.shoppingCart, this.total, this.getQty());
-  }
-
-  private calculateTotal(item: Item) {
-    return item.qty * item.price
+        if (existingItem) {
+          items.map((item) => {
+            if(item.id == newItem.id){
+              item.qty += qtyNum;
+            }
+          })
+          this.shoppingCartSubj.next(items);
+        } else {
+          newItem.qty = qtyNum;
+          this.shoppingCartSubj.next([...this.shoppingCartSubj.value, newItem]);
+        }
   }
 }
+
+
+      
